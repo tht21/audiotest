@@ -7,7 +7,17 @@ function Lyrics({ lyricsUrl }) {
   const audioRef = useRef(null);
   const canvasRef = useRef(null);
   const audioUrl = 'https://storage.googleapis.com/ikara-storage/tmp/beat.mp3';
+  useEffect(() => {
+    // Khởi tạo interval để cập nhật currentTime mỗi 100ms
+    const interval = setInterval(() => {
+      if (audioRef.current) {
+        setCurrentTime(audioRef.current.currentTime);
+      }
+    }, 100);
 
+    // Dừng interval khi component unmount
+    return () => clearInterval(interval);
+  }, []);
  const drawLyrics = () => {
   const canvas = canvasRef.current;
   const ctx = canvas.getContext('2d');
@@ -67,6 +77,7 @@ function Lyrics({ lyricsUrl }) {
             time: parseFloat(word.$.va),
             text: word._
           })));
+          console.log(lines);
           setLyrics(lines);
         });
       })
@@ -107,7 +118,6 @@ function Lyrics({ lyricsUrl }) {
             ref={audioRef}
             src={audioUrl}
             controls
-            onTimeUpdate={(e) => setCurrentTime(e.target.currentTime)}
           >
           </audio>
         </div>
