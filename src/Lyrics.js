@@ -23,10 +23,13 @@ function Lyrics({ lyricsUrl }) {
   const ctx = canvas.getContext('2d');
   ctx.font = '18px Helvetica'; 
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+  
   let yPosition = 80;
+
   lyrics.forEach((line, lineIndex) => {
-    let xPosition = 300;
+    const lineText = line.map(word => word.text);
+    const lineWidth = ctx.measureText(lineText).width;
+    let xPosition = (canvas.width - lineWidth) / 2;
 
     line.forEach((word, wordIndex) => {
       const nextWordTime = wordIndex + 1 < line.length ? line[wordIndex + 1].time : lineIndex + 1 < lyrics.length ? lyrics[lineIndex + 1][0].time : audioRef.current?.duration || 0;
